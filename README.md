@@ -1,71 +1,78 @@
 ﻿# BotTutorial
 
-Bot Framework v4 echo bot sample.
+This tutorial will walk you through the steps required to create a Bot
+Framework project from scratch, configure a Bot in Microsoft Teams, run it
+locally, and then deploy it to Azure.
 
-This bot has been created using [Bot Framework](https://dev.botframework.com), it shows how to create a simple bot that accepts input from the user and echoes it back.
 
-## Prerequisites
+## Tools Installation
 
-- [.NET Core SDK](https://dotnet.microsoft.com/download) version 3.1
+You will need to install the following tools
 
-  ```bash
-  # determine dotnet version
-  dotnet --version
-  ```
+* [.NET Core SDK](https://docs.microsoft.com/en-us/dotnet/core/install/windows?tabs=netcore31)
+* [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+* [ngrok](https://ngrok.com/download)
 
-## To try this sample
+You will also need to install the .NET Bot Framework project template via
 
-- In a terminal, navigate to `BotTutorial`
+```
+dotnet new -i Microsoft.Bot.Framework.CSharp.EchoBot
+```
 
-    ```bash
-    # change into project folder
-    cd BotTutorial
-    ```
 
-- Run the bot from a terminal or from Visual Studio, choose option A or B.
+## Project Setup
 
-  A) From a terminal
+Create a new project via
 
-  ```bash
-  # run the bot
-  dotnet run
-  ```
+```
+mkdir BotTutorial
+cd BotTutorial
+dotnet new echobot -n BotTutorial -o .
+```
 
-  B) Or from Visual Studio
 
-  - Launch Visual Studio
-  - File -> Open -> Project/Solution
-  - Navigate to `BotTutorial` folder
-  - Select `BotTutorial.csproj` file
-  - Press `F5` to run the project
+## Bot Setup in Teams
 
-## Testing the bot using Bot Framework Emulator
+Run through the following steps in Microsoft Teams to create your Teams
+Application and Bot registration
 
-[Bot Framework Emulator](https://github.com/microsoft/botframework-emulator) is a desktop application that allows bot developers to test and debug their bots on localhost or running remotely through a tunnel.
+1. Open Microsoft Teams
+1. Open the App Studio
+1. Go to the Manifest editor tab
+1. Click Create a new app
+1. Fill in the required fields on the App details tab
+1. Click on the Bots tab
+1. Click Set up
+1. Enter the Name and check required options, click Create
+1. Save the App ID (displayed under bot name)
+1. Click Generate new password
+1. Save the password
+1. Test and distribute
+1. Click Install
+1. Click Add for me
 
-- Install the Bot Framework Emulator version 4.9.0 or greater from [here](https://github.com/Microsoft/BotFramework-Emulator/releases)
 
-### Connect to the bot using Bot Framework Emulator
+## Project Configuration
 
-- Launch Bot Framework Emulator
-- File -> Open Bot
-- Enter a Bot URL of `http://localhost:3978/api/messages`
+1. Open `appsettings.json` and add the `MicrosoftAppId` and `MicrosoftAppPassword`
 
-## Deploy the bot to Azure
 
-To learn more about deploying a bot to Azure, see [Deploy your bot to Azure](https://aka.ms/azuredeployment) for a complete list of deployment instructions.
+## Run Locally
 
-## Further reading
+1. In one terminal window, run `dotnet run`
+1. In another terminal window, run `ngrok http -host-header=rewrite 3978` and
+   grab the HTTPS Forwarding URL
+1. Edit your app in the Manifest editor, and on the Bots tab set the Bot
+   endpoint address to `https://<your-id>.ngrok.io/api/messages`
+1. Send your bot a message
 
-- [Bot Framework Documentation](https://docs.botframework.com)
-- [Bot Basics](https://docs.microsoft.com/azure/bot-service/bot-builder-basics?view=azure-bot-service-4.0)
-- [Activity processing](https://docs.microsoft.com/en-us/azure/bot-service/bot-builder-concept-activity-processing?view=azure-bot-service-4.0)
-- [Azure Bot Service Introduction](https://docs.microsoft.com/azure/bot-service/bot-service-overview-introduction?view=azure-bot-service-4.0)
-- [Azure Bot Service Documentation](https://docs.microsoft.com/azure/bot-service/?view=azure-bot-service-4.0)
-- [.NET Core CLI tools](https://docs.microsoft.com/en-us/dotnet/core/tools/?tabs=netcore2x)
-- [Azure CLI](https://docs.microsoft.com/cli/azure/?view=azure-cli-latest)
-- [Azure Portal](https://portal.azure.com)
-- [Language Understanding using LUIS](https://docs.microsoft.com/en-us/azure/cognitive-services/luis/)
-- [Channels and Bot Connector Service](https://docs.microsoft.com/en-us/azure/bot-service/bot-concepts?view=azure-bot-service-4.0)
 
-Generated using `dotnet new echobot` v4.10.3
+## Deploy to Azure
+
+1. Run `Deploy.ps1` to create a resource group with the following resources
+  1. App Service Plan
+  1. Web App
+  1. Storage Account
+1. Grab the printed URL of the format `https://<your-app>.azurewebsites.net/api/messages`
+1. Edit your app in the Manifest editor, and on the Bots tab set the Bot
+   endpoint address to `https://<your-app>.azurewebsites.net/api/messages`
